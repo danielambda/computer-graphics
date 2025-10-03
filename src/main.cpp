@@ -3,10 +3,8 @@
 
 #include <iostream>
 
-int main(int argc, char** argv)
-{
-	try
-	{
+int main(int argc, char** argv) {
+	try {
 		auto settings = cg::settings::parse_settings(argc, argv);
 		auto renderer = cg::renderer::make_renderer(settings);
 
@@ -16,8 +14,7 @@ int main(int argc, char** argv)
 
 		renderer->destroy();
 	}
-	catch (std::exception& e)
-	{
+	catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}

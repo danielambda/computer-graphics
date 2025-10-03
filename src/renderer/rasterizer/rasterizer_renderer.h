@@ -3,10 +3,8 @@
 #include "resource.h"
 
 
-namespace cg::renderer
-{
-	class rasterization_renderer : public renderer
-	{
+namespace cg::renderer {
+	class rasterization_renderer : public renderer {
 	public:
 		virtual void init();
 		virtual void destroy();
