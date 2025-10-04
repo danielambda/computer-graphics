@@ -56,9 +56,6 @@ namespace cg::renderer {
 		if (in_render_target) {
 			render_target = in_render_target;
 	  }
-		if (in_depth_buffer) {
-			depth_buffer = in_depth_buffer;
-		}
 		// TODO Lab: 1.06 Adjust `set_render_target`, and `clear_render_target` methods of `cg::renderer::rasterizer` class to consume a depth buffer
 	}
 
@@ -80,7 +77,8 @@ namespace cg::renderer {
 
 	template<typename VB, typename RT>
 	inline void rasterizer<VB, RT>::set_vertex_buffer(
-			std::shared_ptr<resource<VB>> in_vertex_buffer) {
+		std::shared_ptr<resource<VB>> in_vertex_buffer
+	) {
 		vertex_buffer = in_vertex_buffer;
 	}
 
@@ -92,16 +90,62 @@ namespace cg::renderer {
 
 	template<typename VB, typename RT>
 	inline void rasterizer<VB, RT>::draw(size_t num_vertexes, size_t vertex_offset) {
-		// TODO Lab: 1.04 Implement `cg::world::camera` class
-		// TODO Lab: 1.05 Add `Rasterization` and `Pixel shader` stages to `draw` method of `cg::renderer::rasterizer`
+		size_t vertex_id = vertex_offset;
+
+		while(vertex_id < vertex_offset + num_vertexes) {
+			std::vector<VB> vertices(3);
+			vertices[0] = vertex_buffer->item(index_buffer->item(vertex_id++));
+			vertices[1] = vertex_buffer->item(index_buffer->item(vertex_id++));
+			vertices[2] = vertex_buffer->item(index_buffer->item(vertex_id++));
+
+			for(auto& vertex : vertices) {
+				float4 coords{vertex.v.x, vertex.v.y, vertex.v.z, 1.f};
+				auto processed = vertex_shader(coords, vertex);
+
+				vertex.v.x = processed.first.x / processed.first.w;
+				vertex.v.y = processed.first.y / processed.first.w;
+				vertex.v.z = processed.first.z / processed.first.w;
+
+				vertex.v.x = ( vertex.v.x + 1.f) * width  / 2.f;
+				vertex.v.y = (-vertex.v.y + 1.f) * height / 2.f;
+			}
+
+			const int2 vertex_a(static_cast<int>(vertices[0].v.x),
+										static_cast<int>(vertices[0].v.y));
+			const int2 vertex_b(static_cast<int>(vertices[1].v.x),
+										static_cast<int>(vertices[1].v.y));
+			const int2 vertex_c(static_cast<int>(vertices[2].v.x),
+										static_cast<int>(vertices[2].v.y));
+
+			const int2 min_border(0, 0);
+			const int2 max_border(width - 1, height - 1);
+
+			const int2 min_aabb = clamp(min(vertex_a, min(vertex_b, vertex_c)),
+																	min_border, max_border);
+			const int2 max_aabb = clamp(max(vertex_a, max(vertex_b, vertex_c)),
+																  min_border, max_border);
+
+			for (int x = min_aabb.x; x <= max_aabb.x; x++)
+			for (int y = min_aabb.y; y <= max_aabb.y; y++) {
+				int2 point(x, y);
+				int edge0 = edge_function(vertex_a, vertex_b, point);
+				int edge1 = edge_function(vertex_b, vertex_c, point);
+				int edge2 = edge_function(vertex_c, vertex_a, point);
+				if (edge0 >= 0 && edge1 >= 0 && edge2 >= 0) {
+					float depth = 1.f;
+					auto result = pixel_shader(vertices[0], depth);
+					render_target->item(x, y) = unsigned_color{0, 0, 0};// RT::from_color(result);
+				}
+			}
+		}
+
 		// TODO Lab: 1.06 Add `Depth test` stage to `draw` method of `cg::renderer::rasterizer`
 	}
 
 	template<typename VB, typename RT>
 	inline int
 	rasterizer<VB, RT>::edge_function(int2 a, int2 b, int2 c) {
-		// TODO Lab: 1.05 Implement `cg::renderer::rasterizer::edge_function` method
-		return 0;
+		return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 	}
 
 	template<typename VB, typename RT>
