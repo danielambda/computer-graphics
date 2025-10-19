@@ -10,6 +10,8 @@
 using namespace linalg::aliases;
 using namespace cg::world;
 
+using uint = unsigned int;
+
 cg::world::model::model() {}
 
 cg::world::model::~model() {}
@@ -37,7 +39,7 @@ void model::allocate_buffers(const std::vector<tinyobj::shape_t>& shapes) {
 		size_t index_offset = 0;
 		uint vertex_buffer_size = 0;
 		uint index_buffer_size = 0;
-		std::unordered_map<int3, unsigned int> index_map;
+		std::unordered_map<int3, uint> index_map;
 		const auto& mesh = shape.mesh;
 
 		for(const auto &fv: mesh.num_face_vertices) {
