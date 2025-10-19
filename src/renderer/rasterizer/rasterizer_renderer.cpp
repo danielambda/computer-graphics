@@ -17,8 +17,12 @@ void cg::renderer::rasterization_renderer::init() {
 			settings->width,
 			settings->height
 		);
-	rasterizer->set_render_target(render_target);
-	// TODO Lab: 1.06 Add depth buffer in `cg::renderer::rasterization_renderer`
+	depth_buffer =
+		std::make_shared<cg::resource<float>>(
+			settings->width,
+			settings->height
+		);
+	rasterizer->set_render_target(render_target, depth_buffer);
 }
 
 void cg::renderer::rasterization_renderer::render() {
