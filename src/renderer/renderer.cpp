@@ -16,8 +16,8 @@
 
 using namespace cg::renderer;
 
-void cg::renderer::renderer::set_settings(std::shared_ptr<cg::settings> in_settings) {
-	settings = in_settings;
+cg::renderer::renderer::renderer(std::shared_ptr<cg::settings> settings) {
+	settings = std::move(settings);
 }
 
 unsigned cg::renderer::renderer::get_height() { return settings->height; }
@@ -27,17 +27,16 @@ unsigned cg::renderer::renderer::get_width() { return settings->width; }
 
 std::shared_ptr<renderer> cg::renderer::make_renderer(std::shared_ptr<cg::settings> settings) {
 #ifdef RASTERIZATION
-	auto renderer = std::make_shared<cg::renderer::rasterization_renderer>();
-	renderer->set_settings(settings);
+	auto renderer = std::make_shared<cg::renderer::rasterization_renderer>(std::move(settings));
 	return renderer;
 #endif
 #ifdef RAYTRACING
-	auto renderer = std::make_shared<cg::renderer::ray_tracing_renderer>();
-	renderer->set_settings(settings);
+	auto renderer = std::make_shared<cg::renderer::ray_tracing_renderer>(std::move(settings));
+
 	return renderer;
 #endif
 #ifdef DX12
-	auto renderer = std::make_shared<cg::renderer::dx12_renderer>(settings);
+	auto renderer = std::make_shared<cg::renderer::dx12_renderer>(std::move(settings));
 	return renderer;
 #endif
 

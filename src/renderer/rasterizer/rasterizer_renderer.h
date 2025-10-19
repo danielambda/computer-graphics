@@ -6,6 +6,8 @@
 namespace cg::renderer {
 	class rasterization_renderer : public renderer {
 	public:
+	  rasterization_renderer(std::shared_ptr<cg::settings> settings);
+
 		virtual void init();
 		virtual void destroy();
 

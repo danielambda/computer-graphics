@@ -5,6 +5,7 @@
 #include "utils/timer.h"
 #include <memory>
 
+cg::renderer::rasterization_renderer::rasterization_renderer(std::shared_ptr<cg::settings> settings) : renderer{std::move(settings)} {}
 
 void cg::renderer::rasterization_renderer::init() {
 	load_model();

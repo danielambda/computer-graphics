@@ -10,7 +10,7 @@ namespace cg::renderer
 	class renderer
 	{
 	public:
-		void set_settings(std::shared_ptr<cg::settings> in_settings);
+		renderer(std::shared_ptr<cg::settings> settings);
 
 		unsigned get_height();
 		unsigned get_width();

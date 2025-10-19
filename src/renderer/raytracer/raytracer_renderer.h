@@ -8,6 +8,8 @@ namespace cg::renderer
 	class ray_tracing_renderer : public renderer
 	{
 	public:
+		ray_tracing_renderer(std::shared_ptr<cg::settings> settings);
+
 		virtual void init();
 		virtual void destroy();
 

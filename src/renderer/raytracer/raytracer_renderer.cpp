@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+cg::renderer::ray_tracing_renderer::ray_tracing_renderer(std::shared_ptr<cg::settings> settings) : renderer{std::move(settings)} {}
 
 void cg::renderer::ray_tracing_renderer::init()
 {
