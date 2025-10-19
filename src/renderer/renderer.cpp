@@ -37,8 +37,7 @@ std::shared_ptr<renderer> cg::renderer::make_renderer(std::shared_ptr<cg::settin
 	return renderer;
 #endif
 #ifdef DX12
-	auto renderer = std::make_shared<cg::renderer::dx12_renderer>();
-	renderer->set_settings(settings);
+	auto renderer = std::make_shared<cg::renderer::dx12_renderer>(settings);
 	return renderer;
 #endif
 
