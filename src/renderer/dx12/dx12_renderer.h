@@ -49,6 +49,7 @@ namespace cg::renderer
 	class dx12_renderer : public renderer
 	{
 	public:
+		dx12_renderer(std::shared_ptr<cg::settings> settings);
 		void init() override;
 		void destroy() override;
 

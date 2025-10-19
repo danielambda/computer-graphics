@@ -40,12 +40,12 @@ void cg::renderer::rasterization_renderer::render() {
 		return cg::color::from_float3(data.ambient);
 	};
 
-	rasterizer->clear_render_target(cg::unsigned_color{.r = 48, .g = 37, .b = 60}); // #30253C
+	rasterizer->clear_render_target(cg::unsigned_color(48, 37, 60)); // #30253C
 
 	for(size_t shape_id = 0; shape_id < model->get_index_buffers().size(); shape_id++) {
 		rasterizer->set_vertex_buffer(model->get_vertex_buffers()[shape_id]);
 		rasterizer->set_index_buffer (model->get_index_buffers() [shape_id]);
-		rasterizer->draw(						  model->get_index_buffers() [shape_id]->count(), 0);
+		rasterizer->draw             (model->get_index_buffers() [shape_id]->count(), 0);
 	}
 
 	cg::utils::save_resource(*render_target, settings->result_path);
