@@ -3,25 +3,25 @@
 #include "resource.h"
 
 
-namespace cg::renderer
+namespace cg::renderer {
+
+class ray_tracing_renderer : public renderer
 {
-	class ray_tracing_renderer : public renderer
-	{
-	public:
-		ray_tracing_renderer(std::shared_ptr<cg::settings> settings);
+public:
+	ray_tracing_renderer(std::shared_ptr<cg::settings> settings);
 
-		virtual void init();
-		virtual void destroy();
+	virtual void init();
+	virtual void destroy();
 
-		virtual void update();
-		virtual void render();
+	virtual void update();
+	virtual void render();
 
-	protected:
-		std::shared_ptr<cg::resource<cg::unsigned_color>> render_target;
+protected:
+	std::shared_ptr<cg::resource<cg::unsigned_color>> render_target;
 
-		std::shared_ptr<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>> raytracer;
-		std::shared_ptr<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>> shadow_raytracer;
+	std::shared_ptr<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>> raytracer;
+	std::shared_ptr<cg::renderer::raytracer<cg::vertex, cg::unsigned_color>> shadow_raytracer;
 
-		std::vector<cg::renderer::light> lights;
-	};
+	std::vector<cg::renderer::light> lights;
+};
 }// namespace cg::renderer
